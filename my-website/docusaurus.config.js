@@ -4,7 +4,7 @@
 // There are various equivalent ways to declare your Docusaurus config.
 // See: https://docusaurus.io/docs/api/docusaurus-config
 
-import {themes as prismThemes} from 'prism-react-renderer';
+import { themes as prismThemes } from "prism-react-renderer";
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
@@ -27,7 +27,7 @@ const config = {
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: "Akim Lineiskiy", // Usually your GitHub org/user name.
+  organizationName: "DmitryLesnoy", // Usually your GitHub org/user name.
   projectName: "SmartFindAR", // Usually your repo name.
 
   // onBrokenLinks: "throw",

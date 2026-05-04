@@ -14,26 +14,9 @@ const config = {
   trailingSlash: false,
   deploymentBranch: "gh-pages",
 
-  themes: ["docusaurus-theme-plantuml", "@docusaurus/theme-openapi-docs"],
+  themes: ["docusaurus-theme-plantuml"],
 
-  plugins: [
-    "docusaurus-plugin-drawio",
-    "docusaurus-plugin-openapi-docs",
-    {
-      id: "apiDocs",
-      docsPluginId: "classic",
-      config: {
-        smartfindar: {
-          specPath: "api_specs/api-design.yaml",
-          outputDir: "docs/api",
-          sidebarOptions: {
-            groupPathsBy: "tag",
-            categoryLinkSource: "tag",
-          },
-        },
-      },
-    },
-  ],
+  plugins: ["docusaurus-plugin-drawio"],
 
   presets: [
     [
@@ -144,7 +127,7 @@ const config = {
       prism: {
         theme: prismThemes.github,
         darkTheme: prismThemes.dracula,
-        additionalLanguages: ["java", "yaml", "json", "bash"],
+        additionalLanguages: ["yaml", "json", "bash"],
       },
     }),
 };

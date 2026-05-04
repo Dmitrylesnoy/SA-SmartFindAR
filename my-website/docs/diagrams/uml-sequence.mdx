@@ -1,0 +1,61 @@
+---
+sidebar_position: 6
+title: "UML Sequence"
+description: "Диаграмма последовательностей"
+---
+
+# UML Sequence
+
+## Диаграмма последовательности
+
+```pumld
+@startuml
+title Sequence: Просмотр местоположения предмета на карте
+skinparam style strictuml
+skinparam sequenceMessageAlign center
+
+actor "Пользователь" as User
+participant "App" as App
+participant "Server" as Server
+participant "3D Engine" as Engine
+
+autoactivate on
+
+User -> App: Выбор предмета из списка
+App -> Server: GET /items
+return JSON (предметы[])
+
+User -> App: Выбор карточки предмета
+App -> Server: GET /item/{id}/location
+return JSON (координаты, ID модели)
+
+User -> App: Клик "Показать на карте"
+App -> Engine: Инициализация движка (Scene, Marker, Item)
+Engine -> Engine: Загрузка 3D модели помещения
+Engine -->> App: Сцена готова
+
+App -> Engine: Отобразить метку предмета
+return View обновлен
+
+loop Взаимодействие с моделью
+    User -> Engine: Вращение/зум
+    Engine -> Engine: Пересчет Pivot View
+    Engine -->> User: Обновленный рендеринг
+end
+
+User -> App: Закрыть просмотр
+App -> Engine: Уничтожить инстанс движка
+return OK
+App -->> User: Возврат к списку вещей
+
+@enduml
+```
+---
+
+## Описание
+
+Диаграмма последовательности (Sequence Diagram) показывает взаимодействие объектов во времени. Она используется для детализации:
+
+- **Обмена сообщениями** между компонентами
+- **Временной последовательности** вызовов
+- **Жизненных циклов** объектов

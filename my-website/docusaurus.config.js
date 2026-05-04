@@ -1,5 +1,4 @@
 import { themes as prismThemes } from "prism-react-renderer";
-const simplePlantUML = require("@akebifiky/remark-simple-plantuml");
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -15,18 +14,11 @@ const config = {
   trailingSlash: false,
   deploymentBranch: "gh-pages",
 
-  plugins: [
-    ["drawio", {}],
-    // [
-    //   "@docusaurus/plugin-content-docs",
-    //   {
-    //     id: "style-guide",
-    //     path: "style-guide",
-    //     routeBasePath: "style-guide",
-    //     sidebarPath: require.resolve("./sidebars.js"), 
-    //   },
-    // ],
+  themes: [
+    "docusaurus-theme-plantuml",
   ],
+
+  plugins: ["docusaurus-plugin-drawio"],
 
   presets: [
     [
@@ -37,7 +29,6 @@ const config = {
           sidebarPath: "./sidebars.js",
           routeBasePath: "docs",
           editUrl: "https://github.com/DmitryLesnoy/SA-SmartFindAR/edit/main/my-website/",
-          remarkPlugins: [simplePlantUML],
         },
         blog: false,
         theme: {
@@ -45,27 +36,30 @@ const config = {
         },
       }),
     ],
-    // Redocusaurus для OpenAPI документации (если установили и есть spec-файл)
-    // [
-    //   'redocusaurus',
-    //   {
-    //     specs: [
-    //       {
-    //         id: 'smartfindar',
-    //         spec: 'api_specs/smartfindar-openapi.yaml',
-    //       },
-    //     ],
-    //     theme: {
-    //       primaryColor: '#1890ff',
-    //     },
-    //   }
-    // ],
+    [
+      "redocusaurus",
+      {
+        specs: [
+          {
+            id: "smartfindar",
+            spec: "api_specs/APIDesign.yaml",
+          },
+        ],
+        theme: {
+          primaryColor: "#1890ff",
+        },
+      },
+    ],
   ],
 
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       image: "img/docusaurus-social-card.jpg",
+      colorMode: {
+        defaultMode: "light",
+        respectPrefersColorScheme: true,
+      },
       navbar: {
         title: "SmartFindAR",
         logo: {
@@ -79,18 +73,6 @@ const config = {
             position: "left",
             label: "Документация",
           },
-          // Если будет API документация
-          // {
-          //   to: '/docs/api/smartfindar',
-          //   label: 'API',
-          //   position: 'left',
-          // },
-          // Если будет Style Guide
-          // {
-          //   to: '/style-guide/',
-          //   label: 'Style Guide',
-          //   position: 'left',
-          // },
           {
             href: "https://github.com/DmitryLesnoy/SA-SmartFindAR",
             label: "GitHub",
@@ -105,27 +87,35 @@ const config = {
             title: "Документация",
             items: [
               {
-                label: "Карточка сервиса",
+                label: "Введение",
                 to: "/docs/intro",
               },
-              // Добавьте другие страницы документации по мере создания
-              // {
-              //   label: 'Архитектура',
-              //   to: '/docs/arch',
-              // },
-              // {
-              //   label: 'API Reference',
-              //   to: '/docs/api/smartfindar',
-              // },
+              {
+                label: "Функциональные требования",
+                to: "/docs/functional-requirements/overview",
+              },
+              {
+                label: "Нефункциональные требования",
+                to: "/docs/non-functional-requirements/overview",
+              },
+            ],
+          },
+          {
+            title: "Моделирование",
+            items: [
+              {
+                label: "Нотации и схемы",
+                to: "/docs/diagrams/overview",
+              },
+              {
+                label: "Сбор требований",
+                to: "/docs/requirements/raci-matrix",
+              },
             ],
           },
           {
             title: "Для авторов",
             items: [
-              // {
-              //   label: 'Style Guide',
-              //   to: '/style-guide/',
-              // },
               {
                 label: "Репозиторий",
                 href: "https://github.com/DmitryLesnoy/SA-SmartFindAR",
@@ -138,6 +128,7 @@ const config = {
       prism: {
         theme: prismThemes.github,
         darkTheme: prismThemes.dracula,
+        additionalLanguages: ["java", "yaml", "json", "bash"],
       },
     }),
 };

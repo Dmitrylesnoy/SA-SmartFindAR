@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/2.0" id="definitions_1tom88u" name="definitions" namespace="http://camunda.org/schema/1.0/dmn" exporter="dmn-js (https://demo.bpmn.io/dmn)" exporterVersion="17.7.0">
+  <decision id="decision_14wjanz" name="">
+    <decisionTable id="decisionTable_18qje79">
+      <input id="InputClause_02pw1ag" label="Тип предмета">
+        <inputExpression id="LiteralExpression_1jg8ab6" typeRef="string">
+          <text></text>
+        </inputExpression>
+      </input>
+      <input id="input1" label="Точность локализации" biodi:width="200">
+        <inputExpression id="inputExpression1" typeRef="number">
+          <text></text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_1gydw18" label="Наличие 3D модели вещи" biodi:width="191">
+        <inputExpression id="LiteralExpression_1f0iv02" typeRef="boolean">
+          <text></text>
+        </inputExpression>
+      </input>
+      <output id="OutputClause_1t9hny7" label="Режим рендеринга" typeRef="string" />
+      <output id="OutputClause_0fmgr4i" label="Сообщение пользователю" typeRef="string" />
+      <rule id="DecisionRule_0h268oa">
+        <inputEntry id="UnaryTests_0pixahr">
+          <text>средняя, крупная вещь</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_097ji75">
+          <text>&gt;0.8</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0q8ng9b">
+          <text>true</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_065jyvx">
+          <text>FULL_3D_MESH</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_04tncmv">
+          <text>"Объект выделен в пространстве"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1bi0ut0">
+        <inputEntry id="UnaryTests_0qlyayc">
+          <text>мелкий предмет</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_10dvorw">
+          <text>&gt;0.6</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_182npef">
+          <text>true</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_11m7hcf">
+          <text>AR_PIM_MODEL</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_0i8t28t">
+          <text>"Предмет находится здесь"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0j2d9nf">
+        <inputEntry id="UnaryTests_1vs0e3s">
+          <text>мелкий предмет</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0u6yvi4">
+          <text>&lt;0.6</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1tacv04">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0a4zakd">
+          <text>ZONE_HIGHLIGHT</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_0g8xv8y">
+          <text>"Ищите в этой области"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_124915n">
+        <inputEntry id="UnaryTests_1taamg3">
+          <text>Электроника</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_03l8oxm">
+          <text>&gt;0.9</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_15aiied">
+          <text>false</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0f2ltyf">
+          <text>GENERIC_ICON</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_002f0oa">
+          <text>"Устройство обнаружено"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1ecpyvw">
+        <inputEntry id="UnaryTests_1u1sgij">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_16clcqi">
+          <text>&lt;0.4</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_07thtpt">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_07ccuz8">
+          <text>ROOM_HIGHTLIGHT</text>
+        </outputEntry>
+        <outputEntry id="LiteralExpression_11vqphk">
+          <text>"Предмет где-то в этой комнате"</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+</definitions>

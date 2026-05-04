@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package smartfindar;
+
+import "google/protobuf/timestamp.proto";
+
+// Сообщение-задача для воркера
+message ImageRecognitionTask {
+  int32 user_id = 1;
+  int32 item_id = 2;
+  string image_uri = 3; // Ссылка на S3
+}
+
+// Сообщение-ответ от воркера
+message RecognitionResult {
+  int32 item_id = 1;
+  int32 point_id = 2;
+  string status = 3;
+  google.protobuf.Timestamp timestamp = 4;
+}

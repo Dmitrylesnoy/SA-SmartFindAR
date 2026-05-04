@@ -1,0 +1,61 @@
+asyncapi: 2.6.0
+info:
+  title: SmartFindAR Image Recognition API
+  version: 1.0.0
+  description: Контракт для асинхронной обработки изображений для распознавания местоположения.
+
+channels:
+  item.recognition.request:
+    description: Очередь для отправки задач на распознавание.
+    publish:
+      operationId: processImage
+      message:
+        $ref: '#/components/messages/ImageRecognitionTask'
+
+  item.recognition.result:
+    description: Очередь для получения результатов обработки.
+    subscribe:
+      operationId: onRecognitionResult
+      message:
+        $ref: '#/components/messages/RecognitionResult'
+
+components:
+  messages:
+    ImageRecognitionTask:
+      name: ImageRecognitionTask
+      title: Задач на распознавание
+      summary: Сообщение со ссылкой на фото и метаданными предмета.
+      payload:
+        type: object
+        required: [userId, itemId, imageUri]
+        properties:
+          userId:
+            type: integer
+            description: ID пользователя, кто обновил фото предмета.
+          itemId:
+            type: integer
+            description: ID искомого предмета.
+          imageUri:
+            type: string
+            format: uri
+            description: Ссылка на файл в S3 хранилище.
+
+    RecognitionResult:
+      name: RecognitionResult
+      title: Результат распознавания
+      payload:
+        type: object
+        required: [itemId, pointId, status]
+        properties:
+          itemId:
+            type: integer
+            description: ID искомого предмета.
+          pointId:
+            type: integer
+            description: ID точки в пространстве помещения.
+          status:
+            type: string
+            enum: [SUCCESS, FAILED, ERROR]
+          timestamp:
+            type: string
+            format: date-time

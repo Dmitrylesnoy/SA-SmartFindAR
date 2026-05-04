@@ -1,0 +1,96 @@
+asyncapi: 3.1.0
+info:
+  title: SmartFindAR WebSocket API
+  version: 1.0.0
+  description: Контракт для асинхронного распознавания предметов по фото через WebSocket.
+channels:
+  /ws/v1/recognition:
+    address: /ws/v1/recognition
+    messages:
+      publish.message:
+        $ref: '#/components/messages/ImageUploadRequest'
+      subscribe.message.0:
+        $ref: '#/components/messages/AcceptedResponse'
+      subscribe.message.1:
+        $ref: '#/components/messages/LocationResult'
+    description: >-
+      Канал для обмена данными между мобильным клиентом и сервером
+      распознавания.
+operations:
+  /ws/v1/recognition.publish:
+    action: receive
+    channel:
+      $ref: '#/channels/~1ws~1v1~1recognition'
+    summary: Сообщения от клиента (запрос на распознавание).
+    messages:
+      - $ref: '#/channels/~1ws~1v1~1recognition/messages/publish.message'
+  /ws/v1/recognition.subscribe:
+    action: send
+    channel:
+      $ref: '#/channels/~1ws~1v1~1recognition'
+    summary: Сообщения от сервера (статусы и координаты).
+    messages:
+      - $ref: '#/channels/~1ws~1v1~1recognition/messages/subscribe.message.0'
+      - $ref: '#/channels/~1ws~1v1~1recognition/messages/subscribe.message.1'
+components:
+  messages:
+    ImageUploadRequest:
+      name: ImageUploadRequest
+      title: Запрос на поиск предмета
+      payload:
+        type: object
+        required:
+          - item_id
+          - photo_blob
+        properties:
+          item_id:
+            type: integer
+            description: ID предмета для обновления местоположения.
+          photo_blob:
+            type: string
+            format: binary
+            description: Бинарное содержимое фотографии (JPEG/PNG).
+          timestamp:
+            type: string
+            format: date-time
+    AcceptedResponse:
+      name: AcceptedResponse
+      title: Подтверждение приема
+      payload:
+        type: object
+        properties:
+          status:
+            type: string
+            example: 201 Accepted
+          request_id:
+            type: string
+            description: Идентификатор задачи для отслеживания в логах.
+    LocationResult:
+      name: LocationResult
+      title: Результат распознавания
+      payload:
+        type: object
+        required:
+          - item_id
+          - point_id
+          - location
+        properties:
+          item_id:
+            type: integer
+          point_id:
+            type: integer
+            description: ID созданной точки в базе данных.
+          location:
+            type: object
+            properties:
+              x:
+                type: number
+              'y':
+                type: number
+              z:
+                type: number
+              place_id:
+                type: integer
+          timestamp:
+            type: string
+            format: date-time

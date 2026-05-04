@@ -1,48 +1,32 @@
-// @ts-check
-// `@type` JSDoc annotations allow editor autocompletion and type checking
-// (when paired with `@ts-check`).
-// There are various equivalent ways to declare your Docusaurus config.
-// See: https://docusaurus.io/docs/api/docusaurus-config
-
 import { themes as prismThemes } from "prism-react-renderer";
-
-// This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
+const simplePlantUML = require("@akebifiky/remark-simple-plantuml");
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: "SmartFindAR",
   tagline: "SmartFindAR course documentation",
   favicon: "img/favicon.ico",
-
-  // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
-  // future: {
-  //   v4: true, // Improve compatibility with the upcoming Docusaurus v4
-  // },
-
-  // Set the production url of your site here
-  url: "https://DmitryLesnoy.github.io",
-  // Set the /<baseUrl>/ pathname under which your site is served
-  // For GitHub pages deployment, it is often '/<projectName>/'
+  url: "https://dmitrylesnoy.github.io",
   baseUrl: "/SA-SmartFindAR/",
-
-  // GitHub pages deployment config.
-  // If you aren't using GitHub pages, you don't need these.
-  organizationName: "DmitryLesnoy", // Usually your GitHub org/user name.
-  projectName: "SmartFindAR", // Usually your repo name.
-
-  // onBrokenLinks: "throw",
+  organizationName: "DmitryLesnoy",
+  projectName: "SA-SmartFindAR",
   onBrokenLinks: "warn",
   onBrokenMarkdownLinks: "warn",
   trailingSlash: false,
   deploymentBranch: "gh-pages",
 
-  // Even if you don't use internationalization, you can use this field to set
-  // useful metadata like html lang. For example, if your site is Chinese, you
-  // may want to replace "en" with "zh-Hans".
-  i18n: {
-    defaultLocale: "en",
-    locales: ["en"],
-  },
+  plugins: [
+    ["drawio", {}],
+    // [
+    //   "@docusaurus/plugin-content-docs",
+    //   {
+    //     id: "style-guide",
+    //     path: "style-guide",
+    //     routeBasePath: "style-guide",
+    //     sidebarPath: require.resolve("./sidebars.js"), 
+    //   },
+    // ],
+  ],
 
   presets: [
     [
@@ -51,9 +35,9 @@ const config = {
       ({
         docs: {
           sidebarPath: "./sidebars.js",
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl: "https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
+          routeBasePath: "docs",
+          editUrl: "https://github.com/DmitryLesnoy/SA-SmartFindAR/edit/main/my-website/",
+          remarkPlugins: [simplePlantUML],
         },
         blog: false,
         theme: {
@@ -61,20 +45,31 @@ const config = {
         },
       }),
     ],
+    // Redocusaurus для OpenAPI документации (если установили и есть spec-файл)
+    // [
+    //   'redocusaurus',
+    //   {
+    //     specs: [
+    //       {
+    //         id: 'smartfindar',
+    //         spec: 'api_specs/smartfindar-openapi.yaml',
+    //       },
+    //     ],
+    //     theme: {
+    //       primaryColor: '#1890ff',
+    //     },
+    //   }
+    // ],
   ],
 
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
-      // Replace with your project's social card
       image: "img/docusaurus-social-card.jpg",
-      colorMode: {
-        respectPrefersColorScheme: true,
-      },
       navbar: {
-        title: "My Site",
+        title: "SmartFindAR",
         logo: {
-          alt: "My Site Logo",
+          alt: "SmartFindAR Logo",
           src: "img/logo.svg",
         },
         items: [
@@ -82,10 +77,22 @@ const config = {
             type: "docSidebar",
             sidebarId: "tutorialSidebar",
             position: "left",
-            label: "Tutorial",
+            label: "Документация",
           },
+          // Если будет API документация
+          // {
+          //   to: '/docs/api/smartfindar',
+          //   label: 'API',
+          //   position: 'left',
+          // },
+          // Если будет Style Guide
+          // {
+          //   to: '/style-guide/',
+          //   label: 'Style Guide',
+          //   position: 'left',
+          // },
           {
-            href: "https://github.com/facebook/docusaurus",
+            href: "https://github.com/DmitryLesnoy/SA-SmartFindAR",
             label: "GitHub",
             position: "right",
           },
@@ -95,33 +102,38 @@ const config = {
         style: "dark",
         links: [
           {
-            title: "Docs",
+            title: "Документация",
             items: [
               {
-                label: "Tutorial",
+                label: "Карточка сервиса",
                 to: "/docs/intro",
               },
+              // Добавьте другие страницы документации по мере создания
+              // {
+              //   label: 'Архитектура',
+              //   to: '/docs/arch',
+              // },
+              // {
+              //   label: 'API Reference',
+              //   to: '/docs/api/smartfindar',
+              // },
             ],
           },
           {
-            title: "Community",
+            title: "Для авторов",
             items: [
+              // {
+              //   label: 'Style Guide',
+              //   to: '/style-guide/',
+              // },
               {
-                label: "Stack Overflow",
-                href: "https://stackoverflow.com/questions/tagged/docusaurus",
-              },
-              {
-                label: "Discord",
-                href: "https://discordapp.com/invite/docusaurus",
-              },
-              {
-                label: "X",
-                href: "https://x.com/docusaurus",
+                label: "Репозиторий",
+                href: "https://github.com/DmitryLesnoy/SA-SmartFindAR",
               },
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} SmartFindAR. Built with Docusaurus.`,
       },
       prism: {
         theme: prismThemes.github,

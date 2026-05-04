@@ -14,11 +14,26 @@ const config = {
   trailingSlash: false,
   deploymentBranch: "gh-pages",
 
-  themes: [
-    "docusaurus-theme-plantuml",
-  ],
+  themes: ["docusaurus-theme-plantuml", "@docusaurus/theme-openapi-docs"],
 
-  plugins: ["docusaurus-plugin-drawio"],
+  plugins: [
+    "docusaurus-plugin-drawio",
+    "docusaurus-plugin-openapi-docs",
+    {
+      id: "apiDocs",
+      docsPluginId: "classic",
+      config: {
+        smartfindar: {
+          specPath: "api_specs/api-design.yaml",
+          outputDir: "docs/api",
+          sidebarOptions: {
+            groupPathsBy: "tag",
+            categoryLinkSource: "tag",
+          },
+        },
+      },
+    },
+  ],
 
   presets: [
     [
@@ -42,7 +57,8 @@ const config = {
         specs: [
           {
             id: "smartfindar",
-            spec: "api_specs/APIDesign.yaml",
+            spec: "api_specs/api-design.yaml",
+            route: "/api/smartfindar",
           },
         ],
         theme: {

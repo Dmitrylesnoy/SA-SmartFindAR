@@ -1,0 +1,319 @@
+openapi: 3.0.3
+info:
+  title: SmartFindAR API
+  description: >
+    API приложения для поиска вещей с использованием AR.
+  version: 1.1.0
+
+servers:
+  - url: https://api.smartfindar.io/v1
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Токен авторизации пользователя.
+
+  schemas:
+    Location:
+      type: object
+      required:
+        - place_id
+        - cord_x
+        - cord_y
+        - cord_z
+      properties:
+        place_id:
+          type: integer
+          description: Уникальный ID помещения.
+        cord_x:
+          type: number
+          description: X координата места предмета.
+        cord_y:
+          type: number
+          description: Y координата места предмета.
+        cord_z:
+          type: number
+          description: Z координата места предмета.
+
+    # Краткая модель предмета для отображения в списке
+    ItemShort:
+      type: object
+      required:
+        - id
+        - title
+        - main_photo
+        - status
+      properties:
+        id:
+          type: integer
+          description: Уникальный ID предмета.
+        title:
+          type: string
+          example: "Ваза"
+          description: Название предмета.
+        description:
+          type: string
+          example: "Синяя хрустальная ваза"
+          description: Описание предмета.
+        main_photo:
+          type: string
+          format: uri
+          description: Ссылка на главное фото предмета.
+        place_id:
+          type: integer
+          description: ID помещения, где находится предмет.
+        status:
+          type: string
+          description: Текущее состояние предмета
+          enum: [at_place, got, lost]
+          default: at_place
+          
+    # Полная модель предмета для карточки
+    ItemFull:
+      allOf:
+        - $ref: '#/components/schemas/ItemShort'
+        - type: object
+          required:
+            - photos
+          properties:
+            photos:
+              type: array
+              items:
+                type: string
+                format: uri
+              description: Полный список фотографий предмета.
+            location:
+              $ref: '#/components/schemas/Location'
+
+    # Модель помещения
+    Place:
+      type: object
+      required:
+        - id
+        - name
+        - model_url
+      properties:
+        id:
+          type: integer
+          description: Уникальный ID помещения
+        name:
+          type: string
+          example: "Гостиная"
+        model_url:
+          type: string
+          format: uri
+          description: Ссылка на 3D модель помещения для отображения.
+
+    Error:
+      type: object
+      properties:
+        details:
+          type: string
+        error:
+          type: string
+        message:
+          type: string
+
+  responses:
+    UnauthorizedError:
+      description: Пользователь не авторизован.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFoundError:
+      description: Ресурс не найден.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+paths:
+  /items:
+    get:
+      summary: Список предметов
+      tags: [Items]
+      description: Возвращает краткий список предметов (1 фото, название, описание, статус, id места).
+      responses:
+        '200':
+          description: Успешный возврат списка.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ItemShort'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+    post:
+      summary: Создать предмет
+      tags: [Items]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemFull'
+      responses:
+        '201':
+          description: Предмет успешно создан.
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+  /items/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      summary: Карточка предмета
+      tags: [Items]
+      description: Возвращает полную информацию о предмете, включая координаты.
+      responses:
+        '200':
+          description: Данные карточки предмета.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemFull'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+    patch:
+      summary: Изменить предмет
+      tags: [Items]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemFull'
+      responses:
+        '200':
+          description: Предмет обновлен.
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+  /items/{id}/place/photo:
+    put:
+      summary: Обновить фото места
+      tags: [Items]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Фотография места в формате JPEG/PNG.
+      responses:
+        '200':
+          description: Фото места успешно загружено.
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '429':
+          description: Слишком много попыток
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /items/{id}/share:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      summary: Получить ссылку для общего доступа
+      tags: [Sharing]
+      responses:
+        '200':
+          description: Ссылка на предмет получена.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  share_url:
+                    type: string
+    delete:
+      summary: Закрыть общий доступ
+      tags: [Sharing]
+      responses:
+        '204':
+          description: Доступ по ссылке закрыт.
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '405':
+          description: Метод неразрешен пользователю.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      
+
+  /place:
+    post:
+      summary: Отправить 3д модель
+      tags: [Places]
+      description: Отправка данных отсканированного помещения.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: object
+                  format: binary
+                  description: 3д модель помещения.
+      responses:
+        '201':
+          description: Модель успешно сохранена.
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+  /place/{id}/model:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      summary: Просмотр места предмета
+      tags: [Places]
+      description: Загрузка и отображение 3D модели помещения.
+      responses:
+        '200':
+          description: Данные 3D модели помещения.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Place'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'

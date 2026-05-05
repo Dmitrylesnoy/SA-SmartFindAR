@@ -1,0 +1,7 @@
+{
+  label: Сбор и анализ требований,
+  position: 4,
+  link: {
+    type: generated-index
+  }
+}

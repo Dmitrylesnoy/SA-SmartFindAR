@@ -41,7 +41,6 @@ const config = {
           {
             id: "smartfindar",
             spec: "api_specs/api-design.yaml",
-            route: "/api/smartfindar",
           },
         ],
         theme: {
@@ -127,7 +126,6 @@ const config = {
       prism: {
         theme: prismThemes.github,
         darkTheme: prismThemes.dracula,
-        additionalLanguages: ["yaml", "json", "bash"],
       },
     }),
 };

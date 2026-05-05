@@ -1,0 +1,9 @@
+{
+  label: Нотации и схемы,
+  position: 4,
+  collapsible: true,
+  collapsed: true,
+  link: {
+    type: generated-index
+  }
+}

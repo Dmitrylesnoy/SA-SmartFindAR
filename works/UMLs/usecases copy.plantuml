@@ -6,13 +6,11 @@ actor "Владелец предмета" as Owner
 actor "Друг" as Friend
 
 rectangle "SmartFind" {
-    usecase "CR-1: Создание предмета" as UC_Create
-    usecase "SC-1: Сканирование помещения" as UC_Scan
-    usecase "ED-1: Изменение данных предмета" as UC_Edit
-    usecase "SH-1: Изменение фотографии места \n предмета в общем доступе" as UC_EditShare
     usecase "LS-1: Просмотр списка\nдоступных вещей" as UC_List
     usecase "Просмотр карточки предмета" as UC_Card
     usecase "Просмотр места предмета на карте" as UC_ShowMap
+    usecase "SH-1: Изменение фотографии места предмета\nв общем доступе" as UC_EditShare
+    usecase "ED-1: Изменение данных предмета" as UC_Edit
     usecase "Управление доступом\n(поделиться вещью)" as UC_Access
 }
 
@@ -22,13 +20,11 @@ UC_Access <.. UC_Card : <<extend>>
 
 Owner <|-- Friend
 
-Owner -- UC_Create
+Owner -- UC_Edit
 Owner -- UC_Access
-Owner -- UC_Scan
 
 Friend -- UC_EditShare
 Friend -- UC_ShowMap
-Friend -- UC_Edit
 
 UC_EditShare ..> UC_Card : <<include>>
 UC_ShowMap ..> UC_Card : <<include>>
